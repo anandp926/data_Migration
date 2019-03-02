@@ -6,16 +6,17 @@ import Divider from '@material-ui/core/Divider';
 import Drawer from '@material-ui/core/Drawer';
 import Hidden from '@material-ui/core/Hidden';
 import IconButton from '@material-ui/core/IconButton';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import MailIcon from '@material-ui/icons/Mail';
 import MenuIcon from '@material-ui/icons/Menu';
+import BorderAllIcon from '@material-ui/icons/BorderAll';
+import TableIcon from '@material-ui/icons/TableChart';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
+import { Link } from 'react-router-dom';
 
 const drawerWidth = 240;
 
@@ -60,6 +61,8 @@ class MyDrawer extends React.Component {
     this.setState(state => ({ mobileOpen: !state.mobileOpen }));
   };
 
+  isActive = (value) => (this.props.location.pathname === value ? true : false)
+  
   render() {
     const { classes, theme } = this.props;
 
@@ -68,21 +71,18 @@ class MyDrawer extends React.Component {
         <div className={classes.toolbar} />
         <Divider />
         <List>
-          {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-            <ListItem button key={text}>
-              <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-              <ListItemText primary={text} />
+          <Link to="create-table" style={{textDecoration:'none', color: '#fff'}}>
+            <ListItem button selected={this.isActive('/create-table')}>
+              <ListItemIcon><BorderAllIcon /></ListItemIcon>
+              <ListItemText primary="Create Table" />
             </ListItem>
-          ))}
-        </List>
-        <Divider />
-        <List>
-          {['All mail', 'Trash', 'Spam'].map((text, index) => (
-            <ListItem button key={text}>
-              <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-              <ListItemText primary={text} />
+          </Link>
+          <Link to="tables" style={{textDecoration:'none', color: '#fff'}}>
+            <ListItem button selected={this.isActive('/tables')}>
+              <ListItemIcon><TableIcon /></ListItemIcon>
+              <ListItemText primary="Tables" />
             </ListItem>
-          ))}
+          </Link>
         </List>
       </div>
     );
@@ -101,7 +101,7 @@ class MyDrawer extends React.Component {
               <MenuIcon />
             </IconButton>
             <Typography variant="h6" color="inherit" noWrap>
-              Responsive drawer
+              FA Database
             </Typography>
           </Toolbar>
         </AppBar>
