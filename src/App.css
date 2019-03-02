@@ -1,0 +1,13 @@
+.container {
+    background-color: #fff;
+    padding: 10px
+}
+
+.form-helper-text {
+    padding: 0.5rem
+}
+
+.form-helper-text span {
+    color: red;
+    padding: 0.2rem
+}
