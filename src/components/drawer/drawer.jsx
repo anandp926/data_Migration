@@ -61,23 +61,22 @@ class MyDrawer extends React.Component {
     this.setState(state => ({ mobileOpen: !state.mobileOpen }));
   };
 
-  isActive = (value) => (this.props.location.pathname === value ? true : false)
+  isActive = (value) => (this.props.location.pathname.split('/')[1] === value.split('/')[1] ? true : false)
   
   render() {
     const { classes, theme } = this.props;
-
     const drawer = (
       <div>
         <div className={classes.toolbar} />
         <Divider />
         <List>
-          <Link to="create-table" style={{textDecoration:'none', color: '#fff'}}>
+          <Link to="/create-table" style={{textDecoration:'none', color: '#fff'}}>
             <ListItem button selected={this.isActive('/create-table')}>
               <ListItemIcon><BorderAllIcon /></ListItemIcon>
               <ListItemText primary="Create Table" />
             </ListItem>
           </Link>
-          <Link to="tables" style={{textDecoration:'none', color: '#fff'}}>
+          <Link to="/tables" style={{textDecoration:'none', color: '#fff'}}>
             <ListItem button selected={this.isActive('/tables')}>
               <ListItemIcon><TableIcon /></ListItemIcon>
               <ListItemText primary="Tables" />

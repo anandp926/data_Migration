@@ -5,10 +5,9 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import Button from '../../../components/form/button/button'
-import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import BorderAllIcon from '@material-ui/icons/BorderAll';
+import {Link, withRouter} from 'react-router-dom';
 
 const styles = theme => ({
   root: {
@@ -17,35 +16,29 @@ const styles = theme => ({
   }
 });
 
-function generate(element) {
-  return [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map(value =>
-    React.cloneElement(element, {
-      key: value,
-    }),
-  );
-}
-
 class InteractiveList extends React.Component {
 
   render() {
     const { classes } = this.props;
-
+    const table = ["Saab", "Volvo", "BMW", "Banana", "Orange", "Apple", "Mango"];
     return (
       <div className={classes.root}>
         <Grid container>
             {
-                generate(
-                    <Grid item xs={12} md={3}>
-                        <List component="nav">
-                            <ListItem button>
-                                <ListItemIcon>
-                                    <BorderAllIcon />
-                                </ListItemIcon>
-                                <ListItemText primary="users" />
-                            </ListItem>
+                table.map((list, index) => (
+                  <Grid item xs={12} md={3} key={index}>
+                    <Link to={`/tables/${list}`} style={{textDecoration:'none', color: '#fff'}}>
+                      <List component="nav">
+                          <ListItem button>
+                            <ListItemIcon>
+                              <BorderAllIcon />
+                            </ListItemIcon>
+                            <ListItemText primary={list} />
+                          </ListItem>
                         </List>
-                    </Grid>
-                )
+                    </Link>
+                  </Grid>
+              ))
             }
         </Grid>
       </div>
@@ -57,4 +50,4 @@ InteractiveList.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(InteractiveList);
+export default withRouter(withStyles(styles)(InteractiveList));

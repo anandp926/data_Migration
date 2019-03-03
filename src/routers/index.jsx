@@ -3,6 +3,7 @@ import { Switch, Route, Redirect } from 'react-router-dom';
 import Drawer from '../components/drawer/drawer';
 import CreateTable from '../pages/create_table';
 import Tables from '../pages/tables';
+import TableDetails from '../pages/tables/table/index';
 
 class MainRouting extends Component {
     render(){
@@ -11,7 +12,9 @@ class MainRouting extends Component {
                 <Drawer>
                     <Route path="/" exact component={CreateTable} />
                     <Route path="/create-table" exact component={CreateTable} />
-                    <Route path="/tables" exact component={Tables}/>
+                    <Route path="/tables/:id" exact component={TableDetails}/>
+                    <Route path="/tables" exact component={Tables} />
+
                 </Drawer>
             </Switch>
         )
