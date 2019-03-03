@@ -19,6 +19,7 @@ function ContainedButtons(props) {
         color={props.color} 
         className={classes.button} 
         disabled={props.disabled}
+        onClick={props.onClick}
     >
         {props.children}
     </Button>
