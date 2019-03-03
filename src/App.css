@@ -11,3 +11,8 @@
     color: red;
     padding: 0.2rem
 }
+
+.form-input-row {
+    display: flex;
+    flex-direction: row
+}
