@@ -130,7 +130,6 @@ const styles = theme => ({
     },
     suggestion: {
         display: 'block',
-        backgroundColor: 'black'
     },
     suggestionsList: {
         margin: 0,
@@ -165,7 +164,7 @@ class IntegrationAutosuggest extends React.Component {
     };
 
     render() {
-        const { classes, fullWidth } = this.props;
+        const { classes, fullWidth, label, placeholder } = this.props;
 
         const autosuggestProps = {
             renderInputComponent,
@@ -183,8 +182,8 @@ class IntegrationAutosuggest extends React.Component {
                     inputProps={{
                         fullWidth: fullWidth,
                         classes,
-                        label: 'Select First Table',
-                        placeholder: 'Table Name',
+                        label: label,
+                        placeholder: placeholder,
                         value: this.state.popper,
                         onChange: this.handleChange('popper'),
                         inputRef: node => {

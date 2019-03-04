@@ -5,26 +5,12 @@ class TableDetails extends Component {
     render() {
         return (
             <div className="container">
-                <div className="db-table" style={{ overflowX: 'scroll' }}>
+                <div className="db-table" style={{ overflowX: 'auto' }}>
                     <table>
                         <thead>
                             <tr>
                                 <th>First Name</th>
                                 <th>Last Name</th>
-                                <th>Points</th>
-                                <th>Points</th>
-                                <th>Points</th>
-                                <th>Points</th>
-                                <th>Points</th>
-                                <th>Points</th>
-                                <th>Points</th>
-                                <th>Points</th>
-                                <th>Points</th>
-                                <th>Points</th>
-                                <th>Points</th>
-                                <th>Points</th>
-                                <th>Points</th>
-                                <th>Points</th>
                                 <th>Points</th>
                                 <th>Points</th>
                                 <th>Points</th>
@@ -39,20 +25,6 @@ class TableDetails extends Component {
                                     <tr key={index}>
                                         <td>Eve</td>
                                         <td>Jackson</td>
-                                        <td>94</td>
-                                        <td>94</td>
-                                        <td>94</td>
-                                        <td>94</td>
-                                        <td>94</td>
-                                        <td>94</td>
-                                        <td>94</td>
-                                        <td>94</td>
-                                        <td>94</td>
-                                        <td>94</td>
-                                        <td>94</td>
-                                        <td>94</td>
-                                        <td>94</td>
-                                        <td>94</td>
                                         <td>94</td>
                                         <td>94</td>
                                         <td>94</td>

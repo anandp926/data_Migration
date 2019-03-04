@@ -1,8 +1,6 @@
 .db-table {
     width: 100%;
     background: #fff;
-    display: flex;
-    flex-direction: column;
     padding: 1rem 1rem;
 }
 
@@ -24,7 +22,7 @@
 
 .db-table th, td {
     text-align: left;
-    padding: 8px;
+    padding: 10px;
     border: 1px solid #ddd;
 }
 
