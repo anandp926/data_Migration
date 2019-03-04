@@ -7,7 +7,7 @@ import RemoveIcon from '@material-ui/icons/Remove'
 
 class CreateTable extends Component {
 
-    state= {
+    state = {
         rows: [0],
         rowsCounter: 0
     }
@@ -15,9 +15,9 @@ class CreateTable extends Component {
     addRow = () => {
         let newRows;
         newRows = this.state.rows
-        this.setState({rowsCounter: this.state.rowsCounter+1}, () => {
+        this.setState({ rowsCounter: this.state.rowsCounter + 1 }, () => {
             newRows.push(this.state.rowsCounter);
-            this.setState({rows: newRows});
+            this.setState({ rows: newRows });
         });
     }
 
@@ -25,18 +25,18 @@ class CreateTable extends Component {
         let newRows;
         newRows = this.state.rows;
         newRows.pop(id);
-        this.setState({rows: newRows})
+        this.setState({ rows: newRows })
     }
 
     render() {
-        const {rows} = this.state;
-        return(
+        const { rows } = this.state;
+        return (
             <div className="container">
                 <Form>
                     <div className="form-helper-text">
                         <strong>Enter Table Name<span>*</span></strong>
                     </div>
-                    <InputText 
+                    <InputText
                         label="Table Name"
                     />
                     <div className="form-helper-text">
@@ -45,26 +45,29 @@ class CreateTable extends Component {
                     {
                         this.state.rows.map((rowId, index) => (
                             <div className="form-input-row" key={rowId}>
-                                <InputText 
+                                <InputText
                                     label="Name"
                                 />
-                                <InputText 
+                                <InputText
                                     label="Value"
+                                />
+                                <InputText
+                                    label="Default Value"
                                     default="null"
                                 />
                                 {
-                                    index === rows.length-1
-                                    ? 
+                                    index === rows.length - 1
+                                        ?
                                         <div>
-                                            <Button color="primary" onClick={this.addRow}><AddIcon/></Button>
-                                            <Button 
+                                            <Button color="primary" onClick={this.addRow}><AddIcon /></Button>
+                                            <Button
                                                 color="secondary" onClick={() => this.removeRow(rowId)}
                                                 disabled={rows.length === 1 ? true : false}
                                             >
-                                                <RemoveIcon/>
+                                                <RemoveIcon />
                                             </Button>
                                         </div>
-                                    : null
+                                        : null
                                 }
                             </div>
                         ))
