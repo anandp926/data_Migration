@@ -28,7 +28,7 @@ function SearchBar(props) {
 
   return (
     <Paper className={classes.root} elevation={1}>
-      <InputBase className={classes.input} placeholder="Search Table Name" />
+      <InputBase className={classes.input} placeholder="Search Table Name" value={props.value} onChange={(e) => props.onSearchTable(e.target.value)} />
       <IconButton className={classes.iconButton} aria-label="Search">
         <SearchIcon />
       </IconButton>
