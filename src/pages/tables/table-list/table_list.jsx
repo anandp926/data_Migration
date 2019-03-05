@@ -7,7 +7,7 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import Grid from '@material-ui/core/Grid';
 import BorderAllIcon from '@material-ui/icons/BorderAll';
-import {Link, withRouter} from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 
 const styles = theme => ({
   root: {
@@ -19,27 +19,28 @@ const styles = theme => ({
 class InteractiveList extends React.Component {
 
   render() {
-    const { classes } = this.props;
-    const table = ["Saab", "Volvo", "BMW", "Banana", "Orange", "Apple", "Mango"];
+    const { classes, tables } = this.props;
     return (
       <div className={classes.root}>
         <Grid container>
-            {
-                table.map((list, index) => (
-                  <Grid item xs={12} md={3} key={index}>
-                    <Link to={`/tables/${list}`} style={{textDecoration:'none', color: '#fff'}}>
-                      <List component="nav">
-                          <ListItem button>
-                            <ListItemIcon>
-                              <BorderAllIcon />
-                            </ListItemIcon>
-                            <ListItemText primary={list} />
-                          </ListItem>
-                        </List>
-                    </Link>
-                  </Grid>
+          {
+            tables && (
+              Object.keys(tables).map((keys) => (
+                <Grid item xs={12} md={3} key={keys}>
+                  <Link to={`/tables/${keys}`} style={{ textDecoration: 'none', color: '#fff' }}>
+                    <List component="nav">
+                      <ListItem button>
+                        <ListItemIcon>
+                          <BorderAllIcon />
+                        </ListItemIcon>
+                        <ListItemText primary={keys} />
+                      </ListItem>
+                    </List>
+                  </Link>
+                </Grid>
               ))
-            }
+            )
+          }
         </Grid>
       </div>
     );
