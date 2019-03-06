@@ -12,49 +12,19 @@ const Option = Select.Option;
 class Migrate extends Component {
     state = {
         tables: [],
-        sourceValue: '',
-        sourceSuggestions: [],
+        sourceTable: '',
+        sourceColumn: [],
+        destinationTable: '',
+        destinationColumn: []
     }
 
-    // source Dropdown
-
-    getSuggestions(value) {
-        const inputValue = deburr(value.trim()).toLowerCase();
-        const inputLength = inputValue.length;
-        let count = 0;
-
-        return inputLength === 0 && !this.state.tables
-            ? []
-            : Object.keys(this.state.tables).filter(suggestion => {
-                const keep =
-                    count < 5 && suggestion.toLowerCase().match(inputValue);
-
-                if (keep) {
-                    count += 1;
-                }
-
-                return keep;
-            });
+    onSourceTableSelect = (value) => {
+        this.setState({ sourceTable: value })
     }
 
-    handleSuggestionsFetchRequested = ({ value }) => {
-        this.setState({
-            suggestions: this.getSuggestions(value),
-        });
-    };
-
-    handleSuggestionsClearRequested = () => {
-        this.setState({
-            suggestions: [],
-        });
-    };
-
-    handleChange = (e) => {
-        console.log(e)
-        this.setState({
-            [e.target.name]: e.target.value,
-        });
-    };
+    onDestinationTableSelect = (value) => {
+        this.setState({ destinationTable: value })
+    }
 
     //  tables call
     tablesCallback = (data) => {
@@ -68,26 +38,51 @@ class Migrate extends Component {
     }
 
     render() {
+        const {tables} = this.state;
+        console.log(this.state.sourceTable)
         return (
             <div className="container">
                 <h3 className="text-center">Select Tables for Data Migration</h3>
                 <div className="migrate-table-selection">
                     <div className="migrate-table-selection-1">
                         <Dropdown
-                            labelName="Product"
-                            placeholder="Select Product"
+                            labelName="Source Table"
+                            placeholder="Select Source Table"
                             optionFilterProp="children"
-                            onSelect={this.onProductSelect}
+                            onSelect={this.onSourceTableSelect}
+                            size="large"
+                            isRequired={true}
+                            filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                            classValue='inputField-outline'
+                        >
+                        {
+                            tables && (
+                                Object.keys(tables).map((keys) => (
+                                    <Option value={keys} key={keys}>{keys}</Option>
+                                ))
+                            )
+                        }
+                        </Dropdown>
+                    </div>
+                    <div className="migrate-table-selection-2">
+                        <Dropdown
+                            labelName="Destination Table"
+                            placeholder="Select Destination Table"
+                            optionFilterProp="children"
+                            onSelect={this.onDestinationTableSelect}
                             size="large"
                             isRequired={true}
                             filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
                             classValue={this.state.productIdWarn ? 'inputField-outline' : null}
                         >
-                            <Option value={21} key={24}>testing</Option>
+                        {
+                            tables && (
+                                Object.keys(tables).map((keys) => (
+                                    <Option value={keys} key={keys}>{keys}</Option>
+                                ))
+                            )
+                        }
                         </Dropdown>
-                    </div>
-                    <div className="migrate-table-selection-2">
-                        <Dropdown suggestions={this.state.tables} label="Desti. Table" placeholder="Table Name" fullWidth={true} />
                     </div>
                 </div>
                 <h3 className="text-center">Data Is Migrating Source Table to Destination Table</h3>
@@ -98,7 +93,18 @@ class Migrate extends Component {
                                 <InputText
                                     label="Desti. Column"
                                 />
-                                <Dropdown label="Select Source Column" placeholder="Source Table" />
+                                <div style={{width: '40%'}}>
+                                    <Dropdown
+                                        placeholder="Source Column"
+                                        optionFilterProp="children"
+                                        onSelect={this.onProductSelect}
+                                        size="large"
+                                        filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                                        classValue='inputField'
+                                    >
+                                        <Option value={21} key={24}>testing</Option>
+                                    </Dropdown>
+                                </div>
                                 <InputText
                                     label="Default Value"
                                     default="null"

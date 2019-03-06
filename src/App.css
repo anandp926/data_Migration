@@ -1,3 +1,4 @@
+@import '~antd/dist/antd.css';
 .container {
     background-color: #fff;
     padding: 10px
@@ -26,5 +27,26 @@
 }
 
 .form-control {
-  padding: 1rem
+  padding: 1rem;
+  display: flex;
+  flex-direction: column
 }
+
+.flex-column {
+    flex-direction: column
+}
+
+label {
+    color: black;
+    font-weight: bolder
+}
+
+.star {
+    text-align: center;
+    color: red;
+    padding: 0.2rem
+}
+
+.inputField {
+    width: auto
+  }
