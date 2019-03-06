@@ -6,7 +6,8 @@ import { getTables } from '../../service/api/tables'
 class Tables extends Component {
     state = {
         tables: [],
-        query: ''
+        query: '',
+        searchResult: []
     }
 
     tablesCallback = (data) => {
@@ -21,11 +22,16 @@ class Tables extends Component {
 
     onSearchTable = (query) => {
         if (!query) {
-            this.setState({ query: '' })
+            this.setState({ query: '', searchResult: [] })
         } else {
-            this.setState({ query: query });
-            // this.state.tables.map(book => (this.props.books.filter((bk) => bk.id === book.id).map(bk => book.shelf = bk.shelf)))
-            // this.setState({ tables:  })
+            let filterSearch;
+            this.setState({ query: query }, () => {
+                if (this.state.tables && this.state.query) {
+                    filterSearch = Object.keys(this.state.tables).filter((key) => key.toLowerCase().match(this.state.query.toLowerCase()));
+                    this.setState({ searchResult: filterSearch });
+                }
+            });
+
         }
     }
 
@@ -33,7 +39,7 @@ class Tables extends Component {
         return (
             <div className="container">
                 <SearchBar onSearchTable={this.onSearchTable} value={this.state.query} />
-                <TableList tables={this.state.tables} />
+                <TableList tables={this.state.tables} searchTable={this.state.searchResult} />
             </div>
         )
     }

@@ -24,3 +24,7 @@
 .float-right {
     text-align: right
 }
+
+.form-control {
+  padding: 1rem
+}
