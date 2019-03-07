@@ -55,11 +55,20 @@ class CreateTable extends Component {
         }
     }
 
+    onFormSubmit = (e) => {
+        const data = {
+            tableName: this.state.tableName,
+            columns: []
+        }
+
+        console.log(data)
+    }
+
     render() {
         const { rows, tableName } = this.state;
         return (
             <div className="container">
-                <Form>
+                <Form >
                     <div className="form-helper-text">
                         <strong>Enter Table Name<span>*</span></strong>
                     </div>
@@ -100,7 +109,7 @@ class CreateTable extends Component {
                             </div>
                         ))
                     }
-                    <Button color="primary" size="large">Save</Button>
+                    <Button color="primary" size="large" onClick={this.onFormSubmit}>Save</Button>
                 </Form>
             </div>
         )
