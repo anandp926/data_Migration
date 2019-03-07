@@ -23,3 +23,8 @@
     border-radius: 5px;
     padding: 20px
 }
+
+.migrat-col {
+    display: flex;
+    flex-direction: column
+}

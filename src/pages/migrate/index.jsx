@@ -3,7 +3,6 @@ import './migrate.css';
 import InputText from '../../components/form/text-input/text_input'
 import Button from '../../components/form/button/button';
 import { getTables } from '../../service/api/tables';
-import deburr from 'lodash/deburr';
 import { Select } from 'antd';
 import Dropdown from '../../components/form/auto_select/auto_select'
 
@@ -13,9 +12,7 @@ class Migrate extends Component {
     state = {
         tables: [],
         sourceTable: '',
-        sourceColumn: [],
-        destinationTable: '',
-        destinationColumn: []
+        destinationTable: ''
     }
 
     onSourceTableSelect = (value) => {
@@ -38,8 +35,16 @@ class Migrate extends Component {
     }
 
     render() {
-        const {tables} = this.state;
-        console.log(this.state.sourceTable)
+
+        const { tables, sourceTable, destinationTable } = this.state;
+        let sourceColumns, destinationColumn;
+        if (tables && sourceTable) {
+            sourceColumns = tables[sourceTable]
+        }
+        if (tables && destinationTable) {
+            destinationColumn = tables[destinationTable]
+        }
+        // console.log(sourceColumns)
         return (
             <div className="container">
                 <h3 className="text-center">Select Tables for Data Migration</h3>
@@ -55,13 +60,13 @@ class Migrate extends Component {
                             filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
                             classValue='inputField-outline'
                         >
-                        {
-                            tables && (
-                                Object.keys(tables).map((keys) => (
-                                    <Option value={keys} key={keys}>{keys}</Option>
-                                ))
-                            )
-                        }
+                            {
+                                tables && (
+                                    Object.keys(tables).map((keys) => (
+                                        <Option value={keys} key={keys}>{keys}</Option>
+                                    ))
+                                )
+                            }
                         </Dropdown>
                     </div>
                     <div className="migrate-table-selection-2">
@@ -75,43 +80,63 @@ class Migrate extends Component {
                             filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
                             classValue={this.state.productIdWarn ? 'inputField-outline' : null}
                         >
-                        {
-                            tables && (
-                                Object.keys(tables).map((keys) => (
-                                    <Option value={keys} key={keys}>{keys}</Option>
-                                ))
-                            )
-                        }
+                            {
+                                tables && (
+                                    Object.keys(tables).map((keys) => (
+                                        <Option value={keys} key={keys}>{keys}</Option>
+                                    ))
+                                )
+                            }
                         </Dropdown>
                     </div>
                 </div>
                 <h3 className="text-center">Data Is Migrating Source Table to Destination Table</h3>
                 <div className="migrator-box">
-                    {
-                        [0, 1, 2, 3, 4, 5, 6].map((index) => (
-                            <div className="form-input-row" key={index}>
-                                <InputText
-                                    label="Desti. Column"
-                                />
-                                <div style={{width: '40%'}}>
-                                    <Dropdown
-                                        placeholder="Source Column"
-                                        optionFilterProp="children"
-                                        onSelect={this.onProductSelect}
-                                        size="large"
-                                        filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
-                                        classValue='inputField'
-                                    >
-                                        <Option value={21} key={24}>testing</Option>
-                                    </Dropdown>
-                                </div>
-                                <InputText
-                                    label="Default Value"
-                                    default="null"
-                                />
-                            </div>
-                        ))
-                    }
+                    <div className="form-input-row" >
+                        <div className="migrat-col">
+                            {
+                                sourceColumns !== undefined && sourceColumns !== null && (
+                                    sourceColumns.columns.map((sCOl) => (
+                                        <InputText
+                                            label="Desti. Column"
+                                            value={sCOl}
+                                            key={sCOl}
+                                            readOnly={true}
+                                        />
+                                    ))
+                                )
+                            }
+                        </div>
+                        <div className="migrate-col" style={{ width: '40%' }}>
+                            {
+                                destinationColumn !== undefined && destinationColumn !== null && (
+                                    destinationColumn.columns.map((col, index) => (
+                                        <Dropdown
+                                            placeholder="Source Column"
+                                            optionFilterProp="children"
+                                            onSelect={this.onProductSelect}
+                                            size="large"
+                                            filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                                            classValue='inputField'
+                                            key={index}
+                                        >
+                                            {
+                                                destinationColumn !== undefined && destinationColumn !== null && (
+                                                    destinationColumn.columns.map((dCol) => (
+                                                        <Option value={dCol} key={dCol}>{dCol}</Option>
+                                                    ))
+                                                )
+                                            }
+                                        </Dropdown>
+                                    ))
+                                )
+                            }
+                        </div>
+                        {/* <InputText
+                            label="Default Value"
+                            default="null"
+                        /> */}
+                    </div>
                     <div className="float-right"><Button color="primary" size="large">Migrate</Button></div>
                 </div>
             </div>
