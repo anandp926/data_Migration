@@ -9,3 +9,10 @@ export const getTablesData = (callback, url) => {
     axios.get(`/${url}`).then((res) => callback(res))
         .catch((err) => callback(err))
 }
+
+export const postTables = (callback, data) => {
+    axios.post('/tables', data)
+        .then((res) => {
+            callback(res);
+        }).catch((err) => callback(err));
+};

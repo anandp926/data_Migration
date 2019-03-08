@@ -4,15 +4,14 @@ import InputText from '../../components/form/text-input/text_input';
 import Button from '../../components/form/button/button';
 import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
-import { getTables } from '../../service/api/tables';
+import { getTables, postTables } from '../../service/api/tables';
 
 class CreateTable extends Component {
 
     state = {
-        rows: [0],
-        rowsCounter: 0,
+        rows: [{ "columnName": "", "columnValue": "", "columnDefaultValue": "null" }],
         tableName: '',
-        tables: [],
+        tables: []
     }
 
     //  tables call
@@ -27,12 +26,9 @@ class CreateTable extends Component {
     }
 
     addRow = () => {
-        let newRows;
-        newRows = this.state.rows
-        this.setState({ rowsCounter: this.state.rowsCounter + 1 }, () => {
-            newRows.push(this.state.rowsCounter);
-            this.setState({ rows: newRows });
-        });
+        this.setState((prevState) => ({
+            rows: [...prevState.rows, { "columnName": "", "columnValue": "", "columnDefaultValue": "null" }],
+        }));
     }
 
     removeRow = (id) => {
@@ -55,17 +51,33 @@ class CreateTable extends Component {
         }
     }
 
-    onFormSubmit = (e) => {
-        const data = {
-            tableName: this.state.tableName,
-            columns: []
-        }
+    rowInputChange = index => (e) => {
+        const { name, value } = e.target;
+        const rows = [...this.state.rows];
+        rows[index][name] = value;
+        this.setState({ rows });
+    }
 
-        console.log(data)
+    postTableCallback = (data) => {
+        if (data.status === 201) {
+            console.log(data.data)
+        }
+    }
+    onFormSubmit = (e) => {
+        const column = [];
+        const { rows, tables } = this.state;
+        if (rows && tables) {
+            rows.map((col) => column.push(col.columnName))
+            tables[this.state.tableName] = {
+                columns: column
+            }
+            postTables(this.postTableCallback, tables)
+        }
     }
 
     render() {
-        const { rows, tableName } = this.state;
+        const { rows } = this.state;
+        // console.log(rows)
         return (
             <div className="container">
                 <Form >
@@ -81,16 +93,24 @@ class CreateTable extends Component {
                     </div>
                     {
                         this.state.rows.map((rowId, index) => (
-                            <div className="form-input-row" key={rowId}>
+                            <div className="form-input-row" key={index}>
                                 <InputText
                                     label="Name"
+                                    name="columnName"
+                                    onInputChange={this.rowInputChange(index)}
+                                    value={this.state.rows[index].columnName}
                                 />
                                 <InputText
                                     label="Value"
+                                    name="columnValue"
+                                    onInputChange={this.rowInputChange(index)}
+                                    value={this.state.rows[index].columnValue}
                                 />
                                 <InputText
                                     label="Default Value"
-                                    default="null"
+                                    name="columnDefaultValue"
+                                    onInputChange={this.rowInputChange(index)}
+                                    value={this.state.rows[index].columnDefaultValue}
                                 />
                                 {
                                     index === rows.length - 1

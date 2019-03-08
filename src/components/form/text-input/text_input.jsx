@@ -18,6 +18,7 @@ const InputType = (props) => {
       label={props.label}
       className={classes.textField}
       value={props.value}
+      name={props.name}
       onChange={props.onInputChange}
       margin="normal"
       variant="outlined"

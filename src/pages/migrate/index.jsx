@@ -2,28 +2,67 @@ import React, { Component } from 'react';
 import './migrate.css';
 import InputText from '../../components/form/text-input/text_input'
 import Button from '../../components/form/button/button';
-import { getTables } from '../../service/api/tables';
+import { getTables, getTablesData } from '../../service/api/tables';
 import { Select } from 'antd';
 import Dropdown from '../../components/form/auto_select/auto_select'
 
 const Option = Select.Option;
-
+var a;
 class Migrate extends Component {
     state = {
         tables: [],
         sourceTable: '',
-        destinationTable: ''
+        destinationTable: '',
+        selectedSourceCol: [],
+        tableData: []
     }
 
     onSourceTableSelect = (value) => {
-        this.setState({ sourceTable: value })
+        this.setState({ sourceTable: value }, () => {
+            if (this.state.sourceTable) {
+                getTablesData(this.tablesDataCallback, this.state.sourceTable)
+            }
+        })
     }
 
     onDestinationTableSelect = (value) => {
         this.setState({ destinationTable: value })
     }
 
+    onSourceColumnSelect = (value) => {
+        const values = value.split('-');
+        this.state.selectedSourceCol[values[1]] = values[0];
+        this.setState({ selectedSourceCol: this.state.selectedSourceCol }, () => console.log(this.state.selectedSourceCol))
+        // console.log(value.split('-'))
+    }
+
+    onMigrate = () => {
+        if (this.state.tableData) {
+            const imgSourceData = this.state.tableData;
+            a = imgSourceData.map((isd) => {
+                Object.keys(isd).map((isdKey) => {
+                    if (this.state.selectedSourceCol) {
+                        this.state.selectedSourceCol.map((key, index) => {
+                            if (isdKey === key) {
+                                if (this.state.tables[this.state.destinationTable].columns) {
+                                    const newKey = this.state.tables[this.state.destinationTable].columns[index];
+                                    return { [newKey]: isdKey[key] };
+                                }
+                            }
+                        })
+                    }
+                })
+            })
+        }
+    }
+
     //  tables call
+    tablesDataCallback = (data) => {
+        if (data.status === 200) {
+            this.setState({ tableData: data.data.data })
+        }
+    }
+
     tablesCallback = (data) => {
         if (data.status === 200) {
             this.setState({ tables: data.data })
@@ -43,7 +82,7 @@ class Migrate extends Component {
         }
         if (tables && destinationTable) {
             destinationColumn = tables[destinationTable]
-        }
+        }  
         // console.log(sourceColumns)
         return (
             <div className="container">
@@ -95,12 +134,12 @@ class Migrate extends Component {
                     <div className="form-input-row" >
                         <div className="migrat-col">
                             {
-                                sourceColumns !== undefined && sourceColumns !== null && (
-                                    sourceColumns.columns.map((sCOl) => (
+                                destinationColumn !== undefined && destinationColumn !== null && (
+                                    destinationColumn.columns.map((dCOl) => (
                                         <InputText
                                             label="Desti. Column"
-                                            value={sCOl}
-                                            key={sCOl}
+                                            value={dCOl}
+                                            key={dCOl}
                                             readOnly={true}
                                         />
                                     ))
@@ -109,21 +148,21 @@ class Migrate extends Component {
                         </div>
                         <div className="migrate-col" style={{ width: '40%' }}>
                             {
-                                destinationColumn !== undefined && destinationColumn !== null && (
-                                    destinationColumn.columns.map((col, index) => (
+                                sourceColumns !== undefined && sourceColumns !== null && (
+                                    sourceColumns.columns.map((col, index) => (
                                         <Dropdown
                                             placeholder="Source Column"
                                             optionFilterProp="children"
-                                            onSelect={this.onProductSelect}
+                                            onSelect={this.onSourceColumnSelect}
                                             size="large"
                                             filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
                                             classValue='inputField'
                                             key={index}
                                         >
                                             {
-                                                destinationColumn !== undefined && destinationColumn !== null && (
-                                                    destinationColumn.columns.map((dCol) => (
-                                                        <Option value={dCol} key={dCol}>{dCol}</Option>
+                                                sourceColumns !== undefined && sourceColumns !== null && (
+                                                    sourceColumns.columns.map((sCol) => (
+                                                        <Option value={`${sCol}-${index}`} key={sCol}>{sCol}</Option>
                                                     ))
                                                 )
                                             }
@@ -137,7 +176,7 @@ class Migrate extends Component {
                             default="null"
                         /> */}
                     </div>
-                    <div className="float-right"><Button color="primary" size="large">Migrate</Button></div>
+                    <div className="float-right"><Button color="primary" size="large" onClick={this.onMigrate}>Migrate</Button></div>
                 </div>
             </div>
         )
