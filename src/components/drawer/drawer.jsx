@@ -18,6 +18,8 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 import { Link } from 'react-router-dom';
+import LoginButton from '../../login/login';
+import { connect } from "react-redux";
 
 const drawerWidth = 240;
 
@@ -70,26 +72,35 @@ class MyDrawer extends React.Component {
       <div>
         <div className={classes.toolbar} />
         <Divider />
-        <List>
-          <Link to="/create-table" style={{ textDecoration: 'none', color: '#fff' }}>
-            <ListItem button selected={this.isActive('/create-table')}>
-              <ListItemIcon><BorderAllIcon /></ListItemIcon>
-              <ListItemText primary="Create Table" />
-            </ListItem>
-          </Link>
-          <Link to="/tables" style={{ textDecoration: 'none', color: '#fff' }}>
-            <ListItem button selected={this.isActive('/tables')}>
-              <ListItemIcon><TableIcon /></ListItemIcon>
-              <ListItemText primary="Tables" />
-            </ListItem>
-          </Link>
-          <Link to="/migrate" style={{ textDecoration: 'none', color: '#fff' }}>
-            <ListItem button selected={this.isActive('/migrate')}>
-              <ListItemIcon><CompareArrow /></ListItemIcon>
-              <ListItemText primary="Migrate" />
-            </ListItem>
-          </Link>
-        </List>
+        {
+          this.props.isSignedIn
+          ?
+          <List>
+            <Link to="/create-table" style={{ textDecoration: 'none', color: '#fff' }}>
+              <ListItem button selected={this.isActive('/create-table')}>
+                <ListItemIcon><BorderAllIcon /></ListItemIcon>
+                <ListItemText primary="Create Table" />
+              </ListItem>
+            </Link>
+            <Link to="/tables" style={{ textDecoration: 'none', color: '#fff' }}>
+              <ListItem button selected={this.isActive('/tables')}>
+                <ListItemIcon><TableIcon /></ListItemIcon>
+                <ListItemText primary="Tables" />
+              </ListItem>
+            </Link>
+            <Link to="/migrate" style={{ textDecoration: 'none', color: '#fff' }}>
+              <ListItem button selected={this.isActive('/migrate')}>
+                <ListItemIcon><CompareArrow /></ListItemIcon>
+                <ListItemText primary="Migrate" />
+              </ListItem>
+            </Link>
+            <LoginButton/>
+          </List>
+          :
+          <List>
+            <LoginButton/>
+          </List>
+        }
       </div>
     );
 
@@ -156,4 +167,9 @@ MyDrawer.propTypes = {
   theme: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles, { withTheme: true })(MyDrawer);
+
+const mapStateToProps = state => {
+  return { isSignedIn: state.auth.isSignedIn }
+}
+
+export default connect(mapStateToProps)(withStyles(styles, { withTheme: true })(MyDrawer));

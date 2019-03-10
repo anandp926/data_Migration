@@ -50,3 +50,7 @@ label {
 .inputField {
     padding: 0.3rem
   }
+
+.button-group {
+    margin-left: 1rem
+}

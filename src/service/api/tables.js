@@ -16,3 +16,24 @@ export const postTables = (callback, data) => {
             callback(res);
         }).catch((err) => callback(err));
 };
+
+export const migrateTable = (callback, data, destinationTable) => {
+    axios.post(`/${destinationTable}`, data)
+        .then((res) => {
+            callback(res);
+        }).catch((err) => callback(err));
+};
+
+export const addRowIntoTable = (callback, data, table) => {
+    axios.post(`/${table}`, data)
+        .then((res) => {
+            callback(res);
+        }).catch((err) => callback(err));
+};
+
+export const addColIntoTable = (callback, data) => {
+    axios.post(`/tables`, data)
+        .then((res) => {
+            callback(res);
+        }).catch((err) => callback(err));
+};

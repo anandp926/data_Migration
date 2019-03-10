@@ -9,7 +9,7 @@ import { getTables, postTables } from '../../service/api/tables';
 class CreateTable extends Component {
 
     state = {
-        rows: [{ "columnName": "", "columnValue": "", "columnDefaultValue": "null" }],
+        rows: [{ "columnName": "", "columnType": "", "columnDefaultValue": "null" }],
         tableName: '',
         tables: []
     }
@@ -27,7 +27,7 @@ class CreateTable extends Component {
 
     addRow = () => {
         this.setState((prevState) => ({
-            rows: [...prevState.rows, { "columnName": "", "columnValue": "", "columnDefaultValue": "null" }],
+            rows: [...prevState.rows, { "columnName": "", "columnType": "", "columnDefaultValue": "null" }],
         }));
     }
 
@@ -89,22 +89,22 @@ class CreateTable extends Component {
                         onInputChange={this.onEnterTableName}
                     />
                     <div className="form-helper-text">
-                        <strong>Add Data Into Table<span>*</span></strong>
+                        <strong>Add Prop Into Table<span>*</span></strong>
                     </div>
                     {
                         this.state.rows.map((rowId, index) => (
                             <div className="form-input-row" key={index}>
                                 <InputText
-                                    label="Name"
+                                    label="Column Name"
                                     name="columnName"
                                     onInputChange={this.rowInputChange(index)}
                                     value={this.state.rows[index].columnName}
                                 />
                                 <InputText
-                                    label="Value"
-                                    name="columnValue"
+                                    label="Column Type"
+                                    name="columnType"
                                     onInputChange={this.rowInputChange(index)}
-                                    value={this.state.rows[index].columnValue}
+                                    value={this.state.rows[index].columnType}
                                 />
                                 <InputText
                                     label="Default Value"
