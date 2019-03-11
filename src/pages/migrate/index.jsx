@@ -1,12 +1,19 @@
 import React, { Component } from 'react';
 import './migrate.css';
 import InputText from '../../components/form/text-input/text_input'
-import Button from '../../components/form/button/button';
+import Buttons from '../../components/form/button/button';
 import { getTables, getTablesData, migrateTable } from '../../service/api/tables';
-import { Select } from 'antd';
+import { Select, Modal, Button } from 'antd';
 import Dropdown from '../../components/form/auto_select/auto_select'
 
 const Option = Select.Option;
+
+function success() {
+    Modal.success({
+        title: 'Data Migrated',
+        content: 'Source to Destination Table',
+    });
+}
 
 class Migrate extends Component {
     state = {
@@ -42,8 +49,9 @@ class Migrate extends Component {
     }
 
     onMigrateCallback = (data) => {
-        if(data.status===201){
+        if (data.status === 201) {
             console.log(data.data)
+            success();
         }
     }
 
@@ -56,10 +64,10 @@ class Migrate extends Component {
                     this.state.tables[this.state.destinationTable].columns.map((key, index) => {
                         obj[key] = data[this.state.selectedSourceCol[index]]
                     })
-                imgSourceData.push(obj)
+                    imgSourceData.push(obj)
                 }
             })
-            const newData= {
+            const newData = {
                 data: imgSourceData
             }
             // console.log(imgSourceData)
@@ -93,13 +101,19 @@ class Migrate extends Component {
     render() {
 
         const { tables, sourceTable, destinationTable, selectedSourceCol } = this.state;
-        let sourceColumns, destinationColumn;
+        let sourceColumns, destinationColumn, error = 0;
         if (tables && sourceTable) {
             sourceColumns = tables[sourceTable]
         }
         if (tables && destinationTable) {
             destinationColumn = tables[destinationTable]
-        }  
+        }
+
+        if (sourceTable && destinationTable) {
+            if (sourceTable === destinationTable) {
+                error = 1
+            }
+        }
         return (
             <div className="container">
                 <h3 className="text-center">Select Tables for Data Migration</h3>
@@ -148,58 +162,63 @@ class Migrate extends Component {
                 <h3 className="text-center">Data Is Migrating Source Table to Destination Table</h3>
                 {
                     sourceTable || destinationTable
-                    ?
-                    <div className="migrator-box">
-                        <div className="form-input-row" >
-                            <div className="migrat-col">
-                                {
-                                    destinationColumn !== undefined && destinationColumn !== null && (
-                                        destinationColumn.columns.map((dCOl) => (
-                                            <InputText
-                                                label="Desti. Column"
-                                                value={dCOl}
-                                                key={dCOl}
-                                                readOnly={true}
-                                            />
-                                        ))
-                                    )
-                                }
-                            </div>
-                            <div className="migrate-col" style={{ width: '40%' }}>
-                                {
-                                    sourceColumns !== undefined && sourceColumns !== null && (
-                                        sourceColumns.columns.map((col, index) => (
-                                            <Dropdown
-                                                placeholder="Source Column"
-                                                optionFilterProp="children"
-                                                onSelect={this.onSourceColumnSelect}
-                                                size="large"
-                                                filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
-                                                classValue='inputField'
-                                                key={index}
-                                            >
-                                                {
-                                                    sourceColumns !== undefined && sourceColumns !== null && (
-                                                        sourceColumns.columns.map((sCol) => (
-                                                            <Option value={`${sCol}-${index}`} key={sCol}>{sCol}</Option>
-                                                        ))
-                                                    )
-                                                }
-                                            </Dropdown>
-                                        ))
-                                    )
-                                }
-                            </div>
+                        ?
+                        <div className="migrator-box">
+                            {
+                                error !== 1
+                                    ?
+                                    <div className="form-input-row" >
+                                        <div className="migrat-col">
+                                            {
+                                                destinationColumn !== undefined && destinationColumn !== null && (
+                                                    destinationColumn.columns.map((dCOl) => (
+                                                        <InputText
+                                                            label="Desti. Column"
+                                                            value={dCOl}
+                                                            key={dCOl}
+                                                            readOnly={true}
+                                                        />
+                                                    ))
+                                                )
+                                            }
+                                        </div>
+                                        <div className="migrate-col" style={{ width: '40%' }}>
+                                            {
+                                                sourceColumns !== undefined && sourceColumns !== null && (
+                                                    sourceColumns.columns.map((col, index) => (
+                                                        <Dropdown
+                                                            placeholder="Source Column"
+                                                            optionFilterProp="children"
+                                                            onSelect={this.onSourceColumnSelect}
+                                                            size="large"
+                                                            filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                                                            classValue='inputField'
+                                                            key={index}
+                                                        >
+                                                            {
+                                                                sourceColumns !== undefined && sourceColumns !== null && (
+                                                                    sourceColumns.columns.map((sCol) => (
+                                                                        <Option value={`${sCol}-${index}`} key={sCol}>{sCol}</Option>
+                                                                    ))
+                                                                )
+                                                            }
+                                                        </Dropdown>
+                                                    ))
+                                                )
+                                            }
+                                        </div>
+                                    </div>
+                                    : <div style={{ color: 'red' }}><strong>Source and Destination table can't be same</strong></div>
+                            }
+                            {
+                                this.state.sourceTable && this.state.destinationTable && tables[destinationTable].columns.length === selectedSourceCol.length
+                                    ? <div className="float-right"><Buttons color="primary" size="large" onClick={this.onMigrate}>Migrate</Buttons></div>
+                                    : null
+                            }
                         </div>
-                        {
-                            this.state.sourceTable && this.state.destinationTable && tables[destinationTable].columns.length === selectedSourceCol.length
-                            ?<div className="float-right"><Button color="primary" size="large" onClick={this.onMigrate}>Migrate</Button></div>
-                            :null
-                        }
-                    </div>
-                    :null
+                        : null
                 }
-                
+
             </div>
         )
     }

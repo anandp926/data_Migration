@@ -11,7 +11,8 @@ class CreateTable extends Component {
     state = {
         rows: [{ "columnName": "", "columnType": "", "columnDefaultValue": "null" }],
         tableName: '',
-        tables: []
+        tables: [],
+        errorMsg: ''
     }
 
     //  tables call
@@ -40,11 +41,11 @@ class CreateTable extends Component {
 
     onEnterTableName = (e) => {
         if (e.target.value && this.state.tables) {
-            this.setState({ tableName: e.target.value }, () => {
+            this.setState({ tableName: e.target.value, errorMsg: '' }, () => {
                 Object.keys(this.state.tables)
                     .map((keys) => {
                         if (keys.trim().toLowerCase() === this.state.tableName.trim().toLowerCase()) {
-                            return this.setState({ tableName: '' })
+                            return this.setState({ tableName: '', errorMsg: 'table name already taken' })
                         }
                     })
             })
@@ -88,6 +89,11 @@ class CreateTable extends Component {
                         label="Table Name"
                         onInputChange={this.onEnterTableName}
                     />
+                    {
+                        this.state.errorMsg
+                            ? <strong style={{ color: 'red' }}>{this.state.errorMsg}</strong>
+                            : null
+                    }
                     <div className="form-helper-text">
                         <strong>Add Prop Into Table<span>*</span></strong>
                     </div>
